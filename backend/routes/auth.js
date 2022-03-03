@@ -1,7 +1,8 @@
 const express = require('express');
 const { getNonceMessage, generateNonce, verifySignature, generateJWTToken } = require('../helpers');
 const router = express.Router();
-const User = require("../models/User");
+const sequelize = require("../database");
+const { user: User } = sequelize.models;
 const { body, param } = require("express-validator");
 const { isValidAddress, uniqueAddress, isRegistered, uniqueUsername } = require('../validators');
 const { toChecksumAddress } = require('../sanitizers');
@@ -36,7 +37,9 @@ router.post(
     body("image").isURL(),
     body("username")
         .custom(uniqueUsername)
-        .matches(/^[A-Za-z]\w{3,}$/),
+        .withMessage("Username not unique")
+        .matches(/^[A-Za-z]\w{3,}$/)
+        .withMessage("Username must be atleast 4 characters"),
     body("address")
         .custom(uniqueAddress)
         .custom(isValidAddress)

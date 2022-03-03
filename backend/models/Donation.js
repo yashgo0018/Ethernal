@@ -1,40 +1,41 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database");
 
-class User extends Model { }
+class Donation extends Model { }
 
-User.init({
+Donation.init({
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    address: {
+    donorAddress: {
         type: DataTypes.STRING,
-        unique: true
-    },
-    username: {
-        type: DataTypes.STRING,
-        unique: true
+        allowNull: false
     },
     name: {
         type: DataTypes.STRING,
         allowNull: true
     },
-    image: {
+    message: {
         type: DataTypes.STRING,
         allowNull: true
     },
-    nonce: {
-        type: DataTypes.STRING
+    transactionHash: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
-    isRegistered: {
+    amount: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    confirmed: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
     }
 }, {
     sequelize,
-    modelName: "user"
-})
+    modelName: "donation"
+});
 
-module.exports = User;
+module.exports = Donation;

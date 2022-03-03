@@ -3,6 +3,8 @@ const { param } = require("express-validator");
 const { validate } = require("../middlewares");
 const { toChecksumAddress } = require("../sanitizers");
 const { isValidAddress } = require("../validators");
+const sequelize = require("../database");
+const { user: User } = sequelize.models;
 
 const router = express.Router();
 
@@ -30,7 +32,7 @@ router.get(
 router.get(
     "/username/:username",
     param("username")
-        .toString(),
+        .isString(),
     validate,
     (req, res) => {
         const { username } = req.params;

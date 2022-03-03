@@ -14,7 +14,7 @@ contract Donations is Ownable {
     mapping(address => bool) public isMember;
     mapping(address => uint256) public balanceOf;
 
-    uint256 commissionPersentage = 5;
+    uint256 commissionRate = 5;
     uint256 totalCommissionBalance;
 
     event DonationMade(
@@ -31,7 +31,7 @@ contract Donations is Ownable {
         require(msg.value > 0, "insufficiant amount");
         require(isMember[receiver], "the receiver is not a member");
         require(receiver != msg.sender, "you cannot send donation to yourself");
-        uint256 commission = (msg.value * commissionPersentage) / 100;
+        uint256 commission = (msg.value * commissionRate) / 100;
         totalCommissionBalance += commission;
         balanceOf[receiver] += msg.value - commission;
         uint256 donationId = totalDonations[receiver]++;
@@ -58,5 +58,9 @@ contract Donations is Ownable {
         (bool success, ) = msg.sender.call{value: totalCommissionBalance}("");
         require(success, "fund transfer failed");
         totalCommissionBalance = 0;
+    }
+
+    function updateCommissionRate(uint256 newCommissionRate) public onlyOwner {
+        commissionRate = newCommissionRate;
     }
 }
