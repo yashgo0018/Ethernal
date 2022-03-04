@@ -31,6 +31,14 @@ User.init({
     isRegistered: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
+    },
+    donationsEnabled: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    },
+    currentNonce: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
     }
 }, {
     sequelize,

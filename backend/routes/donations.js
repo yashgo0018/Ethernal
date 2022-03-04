@@ -1,11 +1,32 @@
 const express = require("express");
 const { body } = require("express-validator");
+const Web3 = require("web3");
 const sequelize = require("../database");
+const { signMessage, verifySignature } = require("../helpers");
 const { validate } = require("../middlewares");
+const { onlyAuthorized } = require("../protection_middlewares");
 const { toChecksumAddress } = require("../sanitizers");
 const { isValidAddress } = require("../validators");
 const { user: User, donation: Donation } = sequelize.models;
 const router = express.Router();
+
+router.post("/enable", onlyAuthorized, async (req, res) => {
+    const user = req.user;
+    const hash = Web3.utils.soliditySha3(user.address, true, user.currentNonce);
+    const { signature } = signMessage(hash);
+    user.currentNonce += 1;
+    await user.save();
+    res.json({ address: user.address, signature });
+})
+
+router.post("/disable", onlyAuthorized, async (req, res) => {
+    const user = req.user;
+    const hash = Web3.utils.soliditySha3(user.address, false, user.currentNonce);
+    const { signature } = signMessage(hash);
+    user.currentNonce += 1;
+    await user.save();
+    res.json({ address: user.address, signature });
+})
 
 router.get("/username/:username", async (req, res) => {
     const { username } = req.params;

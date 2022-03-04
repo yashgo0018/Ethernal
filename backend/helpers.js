@@ -1,5 +1,6 @@
 const ethSigUtil = require("@metamask/eth-sig-util");
 var jwt = require('jsonwebtoken');
+const Web3 = require("web3");
 
 module.exports = {
     getNonceMessage(nonce) {
@@ -35,5 +36,10 @@ module.exports = {
         } catch (err) {
             return null;
         }
+    },
+    signMessage(hash) {
+        const web3 = new Web3();
+        const signature = web3.eth.accounts.sign(hash, process.env.SIGNER_PRIVATE_KEY);
+        return signature;
     }
 }

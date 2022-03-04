@@ -14,9 +14,9 @@ router.get(
         .custom(isValidAddress)
         .customSanitizer(toChecksumAddress),
     validate,
-    (req, res) => {
+    async (req, res) => {
         const { address } = req.params;
-        const user = User.findOne({
+        const user = await User.findOne({
             where: {
                 address,
                 isRegistered: true
@@ -34,9 +34,9 @@ router.get(
     param("username")
         .isString(),
     validate,
-    (req, res) => {
+    async (req, res) => {
         const { username } = req.params;
-        const user = User.findOne({
+        const user = await User.findOne({
             where: {
                 username,
                 isRegistered: true
