@@ -11,6 +11,7 @@ const Post = require('./models/Post');
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const donationsRouter = require('./routes/donations');
+const postsRouter = require('./routes/posts');
 const web3listener = require('./web3listener');
 
 
@@ -34,6 +35,7 @@ Post.belongsTo(User);
 // routes
 app.use('/auth', authRouter);
 app.use('/user', userRouter);
+app.use('/post', postsRouter);
 app.use('/donations', donationsRouter);
 app.get('/', (req, res) => {
     res.send('Hello World!');

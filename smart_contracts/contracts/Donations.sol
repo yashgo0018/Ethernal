@@ -17,10 +17,10 @@ contract Donations is Ownable {
     mapping(address => uint256) public totalDonations;
     mapping(address => bool) public isMember;
     mapping(address => uint256) public balanceOf;
-    mapping(address => mapping(uint256 => bool)) public nonceUsed;
+    mapping(address => uint256) public nonceUsed;
     mapping(address => bool) public forceDisabled;
 
-    uint256 public commissionRate = 5;
+    uint256 public commissionRate = 50000;
     uint256 public totalCommissionBalance;
     address private _signer;
 
@@ -32,6 +32,8 @@ contract Donations is Ownable {
     );
     event MemberStatusChange(address member, bool status);
     event WithdrawalMade(address member, uint256 amount);
+    event CommissionRateChange(uint256 rate);
+    event ForceDisabledStatusChange(address member, bool status);
 
     constructor(address _newSigner) Ownable() {
         _signer = _newSigner;
@@ -48,6 +50,7 @@ contract Donations is Ownable {
         require(member != address(0), "invalid member address");
         require(forceDisabled[member] != status, "already updated");
         forceDisabled[member] = status;
+        emit ForceDisabledStatusChange(member, status);
     }
 
     function setMemberStatus(
@@ -55,7 +58,7 @@ contract Donations is Ownable {
         bool _status,
         uint256 _nonce
     ) public {
-        require(!nonceUsed[msg.sender][_nonce], "nonce already used");
+        require(nonceUsed[msg.sender] < _nonce, "invalid nonce");
         require(isMember[msg.sender] == !_status, "status already updated");
         bytes32 hash = keccak256(abi.encodePacked(msg.sender, _status, _nonce));
         bytes32 messageHash = hash.toEthSignedMessageHash();
@@ -64,7 +67,7 @@ contract Donations is Ownable {
             "invalid signature"
         );
         isMember[msg.sender] = _status;
-        nonceUsed[msg.sender][_nonce] = true;
+        nonceUsed[msg.sender] = _nonce;
         emit MemberStatusChange(msg.sender, _status);
     }
 
@@ -73,7 +76,7 @@ contract Donations is Ownable {
         require(isMember[receiver], "the receiver is not a member");
         require(!forceDisabled[receiver], "the receiver is currently disabled");
         require(receiver != msg.sender, "you cannot send donation to yourself");
-        uint256 commission = (msg.value * commissionRate) / 100;
+        uint256 commission = (msg.value * commissionRate) / 1000000;
         totalCommissionBalance += commission;
         balanceOf[receiver] += msg.value - commission;
         uint256 donationId = totalDonations[receiver]++;
@@ -105,5 +108,6 @@ contract Donations is Ownable {
 
     function updateCommissionRate(uint256 newCommissionRate) public onlyOwner {
         commissionRate = newCommissionRate;
+        emit CommissionRateChange(newCommissionRate);
     }
 }

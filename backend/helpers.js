@@ -41,5 +41,11 @@ module.exports = {
         const web3 = new Web3();
         const signature = web3.eth.accounts.sign(hash, process.env.SIGNER_PRIVATE_KEY);
         return signature;
+    },
+    generateSlug(title) {
+        return title
+            .toLowerCase()
+            .replace(/[^\w ]+/g, '')
+            .replace(/ +/g, '-');
     }
 }
