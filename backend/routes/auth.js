@@ -4,7 +4,7 @@ const router = express.Router();
 const sequelize = require("../database");
 const { user: User } = sequelize.models;
 const { body, param } = require("express-validator");
-const { isValidAddress, uniqueAddress, isRegistered, uniqueUsername } = require('../validators');
+const { isValidAddress, uniqueAddress, isRegistered, uniqueUsername, isValidUsername } = require('../validators');
 const { toChecksumAddress } = require('../sanitizers');
 const { validate } = require('../middlewares');
 
@@ -38,7 +38,7 @@ router.post(
     body("username")
         .custom(uniqueUsername)
         .withMessage("Username not unique")
-        .matches(/^[A-Za-z]\w{3,}$/)
+        .custom(isValidUsername)
         .withMessage("Username must be atleast 4 characters"),
     body("address")
         .custom(uniqueAddress)
@@ -102,11 +102,11 @@ router.post(
 router.get(
     "/is-username-available/:username",
     param("username")
-        .matches(/^[A-Za-z]\w{3,}$/),
+        .custom(isValidUsername),
     validate,
-    (req, res) => {
+    async (req, res) => {
         const { username } = req.params;
-        const user = User.findOne({
+        const user = await User.findOne({
             where: {
                 username
             }

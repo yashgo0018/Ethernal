@@ -44,5 +44,13 @@ module.exports = {
             throw new Error("Invalid address");
         }
         return true;
+    },
+    isValidUsername(username) {
+        const re = /^[A-Za-z]\w{3,}$/;
+        return Boolean(re.test(username));
+    },
+    isSlug(slug) {
+        const re = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+        return Boolean(re.test(slug));
     }
 }

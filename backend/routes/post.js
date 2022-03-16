@@ -5,9 +5,11 @@ const sequelize = require("../database");
 const { generateSlug } = require("../helpers");
 const { validate } = require("../middlewares");
 const { onlyAuthorized } = require("../protection_middlewares");
+const { isSlug } = require("../validators");
+const { param } = require("./donations");
 const { user: User, post: Post } = sequelize.models;
 
-router.get("/:username", async (req, res) => {
+router.get("/user/:username", async (req, res) => {
     const { username } = req.params;
     const user = await User.findOne({ where: { username } });
     if (!user) {
@@ -19,7 +21,7 @@ router.get("/:username", async (req, res) => {
     res.json({ posts });
 });
 
-router.get("/:username/:slug", async (req, res) => {
+router.get("/user/:username/:slug", async (req, res) => {
     const { username, slug } = req.params;
     const user = await User.findOne({ where: { username } });
     if (!user) {
@@ -28,11 +30,16 @@ router.get("/:username/:slug", async (req, res) => {
         });
     }
     const post = await user.getPost({ where: { slug } });
+    if (!post) {
+        return res.status(404).json({
+            message: "Post not found"
+        });
+    }
     res.json({ post });
 });
 
 router.post(
-    "/create",
+    "/",
     onlyAuthorized,
     body("title")
         .isString()
@@ -58,32 +65,70 @@ router.post(
     }
 );
 
+router.get("/:id", async (req, res) => {
+    const { id } = req.params;
+    const post = await Post.findOne({ where: { id } });
+    if (!post) {
+        return res.status(404).json({
+            message: "post not found"
+        });
+    }
+    res.json({ post });
+})
+
 router.put(
-    "/update",
+    "/:id",
     onlyAuthorized,
-    body("id")
+    param("id")
         .isNumeric(),
-    body("title")
-        .isString()
-        .isLength({ min: 4 }),
-    body("body")
-        .isString(),
-    body("slug")
-        .isString(),
     validate,
     async (req, res) => {
         // Todo: implement the update post function
+        const { id } = req.params;
+        const { title, slug, body } = req.body;
+        const { user } = req;
+        const post = await user.getPost({ where: { id } });
+        if (!post) {
+            return res.status(404).json({ message: "Post not found!" });
+        }
+        const errors = [];
+        if (title) {
+            if (typeof title != "string" || title.length < 4) {
+                errors.push({ field: "title", message: "title format is wrong" });
+            } else {
+                post.title = title;
+            }
+        }
+        if (slug && slug != post.slug) {
+            if (typeof slug != "string" || !isSlug(slug)) {
+                errors.push({ field: "title", message: "slug format is wrong" });
+            } else {
+                const post2 = await user.getPost({ slug });
+                if (post2)
+                    errors.push({ field: "slug", message: "slug not unique" });
+                else
+                    post.slug = slug;
+            }
+        }
+        if (errors.length !== 0)
+            return res.status(400).json({ errors });
+        if (body) {
+            // TODO: validate body
+            post.body = body;
+        }
+        await post.save();
+        res.json({ message: "Post updated successfully!" });
     }
 );
 
 router.delete(
-    "/delete",
+    "/:id",
     onlyAuthorized,
-    body("id")
+    param("id")
         .isNumeric(),
     async (req, res) => {
         const { user } = req;
-        const { id } = req.body;
+        const { id } = req.params;
         const post = await user.getPost({ where: { id } });
         if (!post) {
             return res.status(404).json({ message: "Post not found" });
