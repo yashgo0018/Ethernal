@@ -1,0 +1,33 @@
+.steps_wrapper {
+    display: flex;
+    flex-direction: column;
+    border-left: 2px double rgb(177, 173, 173);
+}
+
+
+.step_count .span_num {
+    padding : 4px 10px;
+    border-radius : 30%;
+    background : #b14eb8;
+    box-shadow : -4px 4px 10px rgb(247, 217, 51);
+    margin: 10px -14px;
+    color : white;
+    font-size : 15px;
+    font-weight: 100 !important;
+    font-family: sans-serif;
+}
+
+.step_count .span_content {
+    font-size: 17px;
+    color : rgb(17, 16, 16);
+    font-family: 'Roboto', sans-serif;
+    margin : 0px 20px;
+    background: #e7d6f1;
+    padding : 10px;
+    border-radius: 10px;
+}
+
+.step_count:nth-child(1)
+{
+    margin: -10px -14px 10px 0px;
+}

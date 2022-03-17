@@ -11,7 +11,7 @@ const Post = require('./models/Post');
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const donationsRouter = require('./routes/donations');
-const postsRouter = require('./routes/posts');
+const postsRouter = require('./routes/post');
 const web3listener = require('./web3listener');
 
 
