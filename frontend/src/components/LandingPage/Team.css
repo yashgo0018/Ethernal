@@ -1,0 +1,105 @@
+.team_wrapper {
+    transform: skewY(2deg);
+}
+
+.team_heading {
+    font-size: 25px;
+    color : white;
+    font-weight: 500;
+    font-family: 'Archivo', sans-serif;
+}
+
+.team_members {
+    background: transparent;
+}
+
+.team_members img {
+    filter : grayscale(100%);
+    width : 140px;  
+    height : 140px;
+    border : 5px double white;
+    border-radius: 50%;
+    box-shadow: 5px 10px 10px rgba(0,0,0,0.4);
+}
+
+.team_member_details span.member_name {
+    display: block;
+    text-align: center;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 22px;
+    color : rgb(117, 115, 115);
+}
+
+.team_member_details span.member_desc {
+    display: block;
+    text-align: center;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    color : rgb(116, 110, 110);
+    margin : 3px;
+}
+
+.team_title{
+    transform: rotate(-90deg);
+}
+
+.team_head::before {
+    content: '';
+    position: absolute;
+    left : 100%;
+    bottom: 50%;
+    width : 80%;
+    border: 1px solid purple;
+}
+
+.team_head::after {
+    content: '';
+    position: absolute;
+    right : 100%;
+    bottom: 50%;
+    width : 80%;
+    border: 1px solid rgb(172, 62, 172);
+}
+
+
+.team_title .team_head {
+    background-color: rgb(253, 223, 186);
+    padding : 2px 5px;
+    border-radius : 10px;
+    text-align: center;
+}
+
+.team_title .team_head span {
+    letter-spacing: 5px;
+    font-size: 20px;
+    font-weight: 300;
+}
+
+.team_title .team_name span {
+    font-family: 'Caveat', cursive;
+    letter-spacing: 5px;
+    font-size: 55px;
+    color: rgb(77, 75, 75);
+}
+
+.social_links img {
+    width : 35px;
+}
+
+.social_name {
+    font-family: 'Caveat', cursive;
+    letter-spacing: 2px;
+    font-size: 25px;
+    transform: skewY(-3deg);
+}
+
+.social_img {
+    filter : grayscale(100%);
+}
+
+.footer_text {
+    text-align: center;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 18px;
+    color : rgb(153, 147, 147);
+}
