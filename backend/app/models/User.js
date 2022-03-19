@@ -32,6 +32,9 @@ User.init({
         type: DataTypes.BOOLEAN,
         defaultValue: false
     },
+    lastBlock: {
+        type: DataTypes.INTEGER,
+    },
     donationsEnabled: {
         type: DataTypes.BOOLEAN,
         defaultValue: false

@@ -79,9 +79,6 @@ router.get("/:id", async (req, res) => {
 router.put(
     "/:id",
     onlyAuthorized,
-    param("id")
-        .isNumeric(),
-    validate,
     async (req, res) => {
         // Todo: implement the update post function
         const { id } = req.params;
@@ -124,8 +121,6 @@ router.put(
 router.delete(
     "/:id",
     onlyAuthorized,
-    param("id")
-        .isNumeric(),
     async (req, res) => {
         const { user } = req;
         const { id } = req.params;
@@ -138,4 +133,4 @@ router.delete(
     }
 );
 
-module.express = router;
+module.exports = router;

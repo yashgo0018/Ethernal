@@ -25,6 +25,9 @@ Donation.init({
         type: DataTypes.STRING,
         allowNull: false
     },
+    lastBlock: {
+        type: DataTypes.INTEGER,
+    },
     amount: {
         type: DataTypes.STRING,
         allowNull: true

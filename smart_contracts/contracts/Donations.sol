@@ -30,7 +30,7 @@ contract Donations is Ownable {
         address receiver,
         uint256 amount
     );
-    event MemberStatusChange(address member, bool status);
+    event MemberStatusChange(address member, bool status, uint256 nonce);
     event WithdrawalMade(address member, uint256 amount);
     event CommissionRateChange(uint256 rate);
     event ForceDisabledStatusChange(address member, bool status);
@@ -68,7 +68,7 @@ contract Donations is Ownable {
         );
         isMember[msg.sender] = _status;
         nonceUsed[msg.sender] = _nonce;
-        emit MemberStatusChange(msg.sender, _status);
+        emit MemberStatusChange(msg.sender, _status, _nonce);
     }
 
     function donate(address receiver) public payable {

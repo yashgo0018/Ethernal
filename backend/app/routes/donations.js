@@ -12,20 +12,20 @@ const router = express.Router();
 
 router.post("/enable", onlyAuthorized, async (req, res) => {
     const user = req.user;
+    user.currentNonce += 1;
     const hash = Web3.utils.soliditySha3(user.address, true, user.currentNonce);
     const { signature } = signMessage(hash);
-    user.currentNonce += 1;
     await user.save();
-    res.json({ address: user.address, signature });
+    res.json({ address: user.address, signature, nonce: user.currentNonce });
 })
 
 router.post("/disable", onlyAuthorized, async (req, res) => {
     const user = req.user;
+    user.currentNonce += 1;
     const hash = Web3.utils.soliditySha3(user.address, false, user.currentNonce);
     const { signature } = signMessage(hash);
-    user.currentNonce += 1;
     await user.save();
-    res.json({ address: user.address, signature });
+    res.json({ address: user.address, signature, nonce: user.currentNonce });
 })
 
 router.get("/username/:username", async (req, res) => {
